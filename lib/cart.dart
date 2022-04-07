@@ -16,6 +16,13 @@ class _CartPageState extends State<CartPage> {
         appBar: AppBar(
           title: Text('Your Cart'),
           backgroundColor: Colors.purple,
+          // leading: IconButton(
+          //   icon: Icon(Icons.arrow_back),
+          //   onPressed: () {
+          //     Navigator.pop(context,
+          //         MaterialPageRoute(builder: (context) => ProductList()));
+          //   },
+          // ),
         ),
         body: Padding(
           padding: const EdgeInsets.all(15.0),

@@ -35,7 +35,12 @@ class _ProductListState extends State<ProductList> {
                   onPressed: () => Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => CartPage()),
-                  ),
+                  ).then((_) {
+                    // This block runs when you have returned back to the 1st Page from 2nd.
+                    setState(() {
+                      // Call setState to refresh the page.
+                    });
+                  }),
                 ),
               ),
               Positioned(
