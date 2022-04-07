@@ -1,4 +1,3 @@
-import 'package:baitapbuoi5/detail_product.dart';
 import 'package:baitapbuoi5/product_list.dart';
 import 'package:flutter/material.dart';
 
@@ -18,9 +17,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
-      theme: ThemeData(
-      ),
+      theme: ThemeData(),
       initialRoute: Routes.product,
       routes: {
         Routes.product: (context) => ProductList(),
@@ -28,5 +27,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-

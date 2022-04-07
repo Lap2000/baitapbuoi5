@@ -59,7 +59,7 @@ class CartItem extends StatelessWidget {
                     Container(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        'Total: \$' + '${cartItems.total}',
+                        'Total: \$' + '${cartItems.total.toStringAsFixed(2)}',
                         style: TextStyle(fontSize: 16, color: Colors.grey),
                       ),
                     ),

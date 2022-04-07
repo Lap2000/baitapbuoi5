@@ -48,7 +48,7 @@ class _ProductListState extends State<ProductList> {
                   decoration: BoxDecoration(
                       shape: BoxShape.circle, color: Colors.purple),
                   child: Text(
-                    '0',
+                    cartProduct.count.toString(),
                     style: TextStyle(color: Colors.white, fontSize: 14),
                   ),
                 ),
@@ -133,7 +133,9 @@ class _ProductListState extends State<ProductList> {
                                   content: Text('Đã thêm vào giỏ hàng'),
                                 ),
                               );
-                              cartProduct.addToCart(productList[i]);
+                              setState(() {
+                                cartProduct.addToCart(productList[i]);
+                              });
                             },
                           ),
                         ],

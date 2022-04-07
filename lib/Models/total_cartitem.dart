@@ -10,6 +10,12 @@ class CartTotal {
     });
   }
 
+  int get count {
+    return cartItems.fold(0, (int currentCount, CartItems nextCartItem) {
+      return currentCount + nextCartItem.count;
+    });
+  }
+
   void addToCart(Product product) {
     bool isAdd = false;
     if (cartItems.length == 0) {
