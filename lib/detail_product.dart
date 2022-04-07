@@ -1,4 +1,4 @@
-import 'package:baitapbuoi5/product_list.dart';
+import 'package:baitapbuoi5/Models/product_model.dart';
 import 'package:flutter/material.dart';
 
 class ProductsDetail extends StatelessWidget {
@@ -19,8 +19,13 @@ class ProductsDetail extends StatelessWidget {
               Positioned(
                 top: 30,
                 child: IconButton(
-                  onPressed: () {Navigator.pop(context);},
-                  icon: Icon(Icons.arrow_back,color: Colors.white,),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: Icon(
+                    Icons.arrow_back,
+                    color: Colors.white,
+                  ),
                 ),
               ),
               Positioned(
@@ -28,18 +33,28 @@ class ProductsDetail extends StatelessWidget {
                 left: 50,
                 child: Text(
                   product.title,
-                  style: TextStyle(color: Colors.white,fontSize: 30),
+                  style: TextStyle(color: Colors.white, fontSize: 30),
                 ),
               ),
             ]),
           ),
-          SizedBox(height: 10,),
-          Center(
-            child: Text(product.price.toString()+' \$',style: TextStyle(fontSize: 20,color: Colors.grey),),
+          SizedBox(
+            height: 10,
           ),
-          SizedBox(height: 10,),
           Center(
-            child: Text(product.description,style: TextStyle(fontSize: 15),),
+            child: Text(
+              product.price.toString() + ' \$',
+              style: TextStyle(fontSize: 20, color: Colors.grey),
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Center(
+            child: Text(
+              product.description,
+              style: TextStyle(fontSize: 15),
+            ),
           ),
         ],
       )),

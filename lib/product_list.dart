@@ -1,35 +1,10 @@
+import 'package:baitapbuoi5/Models/product_model.dart';
+import 'package:baitapbuoi5/Models/total_cartitem.dart';
 import 'package:baitapbuoi5/detail_product.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'main.dart';
-
-class Product {
-  final String title;
-  final String image;
-  final double price;
-  final String description;
-
-  Product(this.title, this.image, this.price, this.description);
-}
-
-late List<Product> productList = [
-  Product(
-      'Áo sơ mi',
-      'https://4men.com.vn/thumbs/2016/07/ao-so-mi-han-quoc-cam-tron-asm788-4007-p.jpg',
-      19.99,
-      'Áo sơ mi siêu đẹp'),
-  Product(
-      'Áo Hoodie',
-      'https://mikaystore.com/wp-content/uploads/2021/01/Ao-hoodie-nu-danh-cho-nhung-ban-mac-di-hoc-2.png',
-      24.99,
-      'Áo hoodie mới nhất'),
-  Product(
-      'Áo thun',
-      'https://image.uniqlo.com/UQ/ST3/AsianCommon/imagesgoods/434247/item/goods_00_434247.jpg?width=1600&impolicy=quality_75',
-      14.99,
-      'Áo thun chất lượng'),
-];
+import 'cart.dart';
 
 class ProductList extends StatefulWidget {
   @override
@@ -49,9 +24,36 @@ class _ProductListState extends State<ProductList> {
             icon: Icon(Icons.more_vert),
             onPressed: () {},
           ),
-          IconButton(
-            icon: Icon(Icons.shopping_cart),
-            onPressed: () {},
+          Stack(
+            children: [
+              Center(
+                child: IconButton(
+                  icon: const Icon(
+                    Icons.shopping_cart,
+                    color: Colors.white,
+                  ),
+                  onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => CartPage()),
+                  ),
+                ),
+              ),
+              Positioned(
+                right: 10,
+                top: 12,
+                child: Container(
+                  alignment: Alignment.center,
+                  height: 15,
+                  width: 15,
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle, color: Colors.purple),
+                  child: Text(
+                    '0',
+                    style: TextStyle(color: Colors.white, fontSize: 14),
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
         leading: IconButton(
@@ -59,63 +61,90 @@ class _ProductListState extends State<ProductList> {
           onPressed: () {},
         ),
       ),
-      body: GridView.builder(
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2, childAspectRatio: (200 / 150)),
-          itemCount: productList.length,
-          itemBuilder: (BuildContext context, int index) {
-            return Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15.0),
-              ),
-              child: InkWell(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ProductsDetail(productList[index]),
-                    ),
-                  );
-                },
-                child: Container(
-                  child: Stack(
-                    fit: StackFit.expand,
-                    children: [
-                      Image.network(productList[index].image,
-                          fit: BoxFit.cover),
-                      Positioned(
-                        height: 40,
-                        width: 210,
-                        bottom: 0,
-                        child: Container(
-                          color: Colors.black.withOpacity(0.85),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              IconButton(
-                                  onPressed: () {},
-                                  icon: Icon(
-                                    Icons.favorite_border,
-                                    color: Colors.purple,
-                                  )),
-                              Text(
-                                productList[index].title,
-                                style: TextStyle(color: Colors.white),
-                              ),
-                              IconButton(
-                                  onPressed: () {},
-                                  icon: Icon(Icons.shopping_cart,
-                                      color: Colors.purple)),
-                            ],
-                          ),
-                        ),
-                      )
-                    ],
+      body: GridView(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2, childAspectRatio: 3 / 2),
+        children: [
+          for (int i = 0; i < productList.length; i++)
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ProductsDetail(productList[i]),
                   ),
+                );
+              },
+              child: Container(
+                alignment: Alignment.center,
+                margin: EdgeInsets.all(8),
+                child: Stack(
+                  alignment: Alignment.bottomCenter,
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(16.0),
+                      child: Image.network(
+                        productList[i].image,
+                        width: MediaQuery.of(context).size.width / 2 - 16,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                          color: Colors.black.withOpacity(0.7),
+                          borderRadius: const BorderRadius.only(
+                              bottomLeft: Radius.circular(16.0),
+                              bottomRight: Radius.circular(16.0))),
+                      height: 50,
+                      child: Row(
+                        children: [
+                          IconButton(
+                            icon: Icon(
+                              productList[i].favorite
+                                  ? Icons.favorite
+                                  : Icons.favorite_border,
+                              color: Color(0xFF9F28B4),
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                productList[i].favorite =
+                                    !productList[i].favorite;
+                              });
+                            },
+                          ),
+                          Expanded(
+                            child: Text(
+                              productList[i].title,
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontStyle: FontStyle.normal,
+                                  fontSize: 14),
+                            ),
+                            flex: 1,
+                          ),
+                          IconButton(
+                            icon: const Icon(
+                              Icons.shopping_cart,
+                              color: Color(0xFF9F28B4),
+                            ),
+                            onPressed: () {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('Đã thêm vào giỏ hàng'),
+                                ),
+                              );
+                              cartProduct.addToCart(productList[i]);
+                            },
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
                 ),
               ),
-            );
-          }),
+            ),
+        ],
+      ),
     ));
   }
 }
