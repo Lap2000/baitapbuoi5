@@ -19,16 +19,12 @@ class CartTotal {
   void addToCart(Product product) {
     bool isAdd = false;
     if (cartItems.length == 0) {
-      print('add if 1');
       CartItems cartItem =
           CartItems(product: product, total: product.price, count: 1);
       cartItems.add(cartItem);
     } else {
       for (int i = 0; i < cartItems.length; i++) {
-        print(product.title);
-        print(cartItems[i].product.title);
         if (product == cartItems[i].product) {
-          print('add if 2');
           cartItems[i].addcount();
           isAdd = true;
           break;
