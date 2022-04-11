@@ -101,7 +101,6 @@ class CartTotal {
   void deleteAllFromCloneCart(
       CartTotal cartTotal, BuildContext context, Function() refesh) async {
     int count = 0;
-    print(cartTotal.cartItemsList.length);
     if (cartItemsList.length == 0 || cartTotal.cartItemsList.length == 0) {
     } else {
       for (int i = 0; i < cartTotal.cartItemsList.length; i++) {

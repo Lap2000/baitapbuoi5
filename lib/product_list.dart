@@ -142,7 +142,6 @@ class _ProductListState extends State<ProductList> {
                               setState(() {
                                 cartProduct.addToCart(productList[i]);
                               });
-                              print(cartProductDeleted.cartItemsList.length);
                             },
                           ),
                         ],

@@ -70,7 +70,6 @@ class _CartItemState extends State<CartItem> {
                       onChanged: (bool? value) {
                         setState(() {
                           isChecked = value!;
-                          print(isChecked);
                           _addDeletedList();
                         });
                       },
