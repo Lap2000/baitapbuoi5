@@ -2,11 +2,46 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'Models/cart_model.dart';
+import 'Models/total_cartitem.dart';
 
-class CartItem extends StatelessWidget {
+class CartItem extends StatefulWidget {
+  final int index;
   final CartItems cartItems;
+  final Function() notifyParent;
+  final bool isSelected;
 
-  CartItem(this.cartItems);
+  CartItem(this.cartItems, this.index, this.notifyParent, this.isSelected);
+
+  @override
+  State<CartItem> createState() => _CartItemState();
+}
+
+class _CartItemState extends State<CartItem> {
+  bool isChecked = false;
+
+  void _increaseCount() {
+    setState(() {
+      cartProduct.cartItemsList[widget.index].addcount();
+      widget.notifyParent();
+    });
+  }
+
+  void _decreaseCount() {
+    setState(() {
+      if (cartProduct.cartItemsList[widget.index].count <= 1) {
+        cartProduct.removeFromCart(cartProduct.cartItemsList[widget.index]);
+      } else {
+        cartProduct.cartItemsList[widget.index].subcount();
+      }
+      widget.notifyParent();
+    });
+  }
+
+  void _addDeletedList() {
+    if (isChecked) {
+      cartProductDeleted.addFullToCart(widget.cartItems);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,18 +61,32 @@ class CartItem extends StatelessWidget {
         ],
       ),
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(4.0),
         child: Row(
           children: [
+            Container(
+              child: widget.isSelected
+                  ? Checkbox(
+                      onChanged: (bool? value) {
+                        setState(() {
+                          isChecked = value!;
+                          print(isChecked);
+                          _addDeletedList();
+                        });
+                      },
+                      value: isChecked,
+                    )
+                  : Text(''),
+            ),
             Padding(
-              padding: const EdgeInsets.all(15.0),
+              padding: const EdgeInsets.all(8.0),
               child: Container(
                 height: 50,
                 width: 50,
                 child: CircleAvatar(
                   backgroundColor: Colors.purple,
                   child: Text(
-                    '\$' + cartItems.product.price.toStringAsFixed(2),
+                    '\$' + widget.cartItems.product.price.toStringAsFixed(2),
                     style: TextStyle(fontSize: 12),
                   ),
                 ),
@@ -52,15 +101,16 @@ class CartItem extends StatelessWidget {
                     Container(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        cartItems.product.title,
-                        style: TextStyle(fontSize: 18),
+                        widget.cartItems.product.title,
+                        style: TextStyle(fontSize: 16),
                       ),
                     ),
                     Container(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        'Total: \$' + '${cartItems.total.toStringAsFixed(2)}',
-                        style: TextStyle(fontSize: 16, color: Colors.grey),
+                        'Total: \$' +
+                            '${widget.cartItems.total.toStringAsFixed(2)}',
+                        style: TextStyle(fontSize: 14, color: Colors.grey),
                       ),
                     ),
                   ],
@@ -68,13 +118,31 @@ class CartItem extends StatelessWidget {
               ),
             ),
             Spacer(),
-            Container(
-              padding: EdgeInsets.all(15),
-              alignment: Alignment.centerRight,
-              child: Text(
-                '${cartItems.count}x',
-                style: TextStyle(fontSize: 16),
-              ),
+            Row(
+              children: [
+                IconButton(
+                  onPressed: _decreaseCount,
+                  icon: Icon(
+                    Icons.remove,
+                    color: Colors.red,
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.all(4),
+                  alignment: Alignment.centerRight,
+                  child: Text(
+                    'x${widget.cartItems.count}',
+                    style: TextStyle(fontSize: 16),
+                  ),
+                ),
+                IconButton(
+                  onPressed: _increaseCount,
+                  icon: Icon(
+                    Icons.add,
+                    color: Colors.blue,
+                  ),
+                ),
+              ],
             ),
           ],
         ),

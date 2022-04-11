@@ -54,7 +54,7 @@ class _ProductListState extends State<ProductList> {
                       shape: BoxShape.circle, color: Colors.purple),
                   child: Text(
                     cartProduct.count.toString(),
-                    style: TextStyle(color: Colors.white, fontSize: 14),
+                    style: TextStyle(color: Colors.white, fontSize: 12),
                   ),
                 ),
               ),
@@ -67,8 +67,9 @@ class _ProductListState extends State<ProductList> {
         ),
       ),
       body: GridView(
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2, childAspectRatio: 3 / 2),
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: MediaQuery.of(context).size.width > 600 ? 3 : 2,
+            childAspectRatio: 3 / 2),
         children: [
           for (int i = 0; i < productList.length; i++)
             InkWell(
@@ -141,6 +142,7 @@ class _ProductListState extends State<ProductList> {
                               setState(() {
                                 cartProduct.addToCart(productList[i]);
                               });
+                              print(cartProductDeleted.cartItemsList.length);
                             },
                           ),
                         ],

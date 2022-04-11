@@ -12,6 +12,11 @@ class CartItems {
     total = total + product.price;
   }
 
+  void addCountNum(int num) {
+    count = count + num;
+    total = total + product.price * num;
+  }
+
   void subcount() {
     count = count - 1;
     total = total - product.price;

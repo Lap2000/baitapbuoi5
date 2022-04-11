@@ -1,31 +1,75 @@
 import 'package:baitapbuoi5/Models/cart_model.dart';
 import 'package:baitapbuoi5/Models/product_model.dart';
+import 'package:flutter/material.dart';
 
 class CartTotal {
-  List<CartItems> cartItems = [];
+  List<CartItems> cartItemsList = [];
 
   double get total {
-    return cartItems.fold(0.0, (double currentTotal, CartItems nextCartItem) {
+    return cartItemsList.fold(0.0,
+        (double currentTotal, CartItems nextCartItem) {
       return currentTotal + nextCartItem.total;
     });
   }
 
   int get count {
-    return cartItems.fold(0, (int currentCount, CartItems nextCartItem) {
+    return cartItemsList.fold(0, (int currentCount, CartItems nextCartItem) {
       return currentCount + nextCartItem.count;
     });
   }
 
+  void addFullToCart(CartItems cartItem) {
+    bool isAdd = false;
+    if (cartItemsList.length == 0) {
+      cartItemsList.add(cartItem);
+    } else {
+      for (int i = 0; i < cartItemsList.length; i++) {
+        if (cartItem.product == cartItemsList[i].product) {
+          cartItemsList[i].addCountNum(cartItem.count);
+          isAdd = true;
+          break;
+        }
+      }
+      if (!isAdd) {
+        cartItemsList.add(cartItem);
+      }
+    }
+  }
+
+  void addListToCart(CartTotal cartTotal) {
+    if (cartTotal.cartItemsList == 0) {
+    } else {
+      for (int i = 0; i < cartTotal.cartItemsList.length; i++) {
+        cartItemsList.add(cartTotal.cartItemsList[i]);
+      }
+    }
+  }
+
+  void deleteFromCart(CartItems cartItem) {
+    bool isDeleted = false;
+    if (cartItemsList.length == 0) {
+    } else {
+      for (int i = 0; i < cartItemsList.length; i++) {
+        if (cartItem.product == cartItemsList[i].product) {
+          cartItemsList.remove(cartItem);
+          isDeleted = true;
+          break;
+        }
+      }
+      if (!isDeleted) {}
+    }
+  }
+
   void addToCart(Product product) {
     bool isAdd = false;
-    if (cartItems.length == 0) {
+    if (cartItemsList.length == 0) {
       CartItems cartItem =
           CartItems(product: product, total: product.price, count: 1);
-      cartItems.add(cartItem);
+      cartItemsList.add(cartItem);
     } else {
-      for (int i = 0; i < cartItems.length; i++) {
-        if (product == cartItems[i].product) {
-          cartItems[i].addcount();
+      for (int i = 0; i < cartItemsList.length; i++) {
+        if (product == cartItemsList[i].product) {
+          cartItemsList[i].addcount();
           isAdd = true;
           break;
         }
@@ -33,26 +77,64 @@ class CartTotal {
       if (!isAdd) {
         CartItems cartItem =
             CartItems(product: product, total: product.price, count: 1);
-        cartItems.add(cartItem);
+        cartItemsList.add(cartItem);
       }
     }
   }
 
   void subItemCart(Product product) {
-    for (int i = 0; i < cartItems.length; i++) {
-      if (product == cartItems[i].product) {
-        if (cartItems[i].count <= 1) {
-          cartItems.remove(cartItems[i]);
+    for (int i = 0; i < cartItemsList.length; i++) {
+      if (product == cartItemsList[i].product) {
+        if (cartItemsList[i].count <= 1) {
+          cartItemsList.remove(cartItemsList[i]);
         } else {
-          cartItems[i].subcount();
+          cartItemsList[i].subcount();
         }
       }
     }
   }
 
   void removeFromCart(CartItems cartItem) {
-    cartItems.remove(cartItem);
+    cartItemsList.remove(cartItem);
+  }
+
+  void deleteAllFromCloneCart(
+      CartTotal cartTotal, BuildContext context, Function() refesh) async {
+    int count = 0;
+    print(cartTotal.cartItemsList.length);
+    if (cartItemsList.length == 0 || cartTotal.cartItemsList.length == 0) {
+    } else {
+      for (int i = 0; i < cartTotal.cartItemsList.length; i++) {
+        for (int j = 0; j < cartItemsList.length; j++) {
+          if (cartTotal.cartItemsList[i] == cartItemsList[j]) {
+            count++;
+            cartItemsList.remove(cartTotal.cartItemsList[i]);
+          }
+        }
+      }
+      ScaffoldMessenger.of(context).clearSnackBars();
+      if (count != 0) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Đã xóa $count loại sản phẩm khỏi giỏ hàng'),
+            duration: const Duration(seconds: 2),
+            action: SnackBarAction(
+              label: 'Khôi phục',
+              onPressed: () {
+                cartProduct.addListToCart(cartProductDeleted);
+                cartProductDeleted.cartItemsList.clear();
+                refesh();
+              },
+            ),
+          ),
+        );
+      }
+      await Future.delayed(Duration(seconds: 5));
+      cartProductDeleted.cartItemsList.clear();
+    }
   }
 }
 
 late CartTotal cartProduct = CartTotal();
+
+late CartTotal cartProductDeleted = CartTotal();

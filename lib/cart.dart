@@ -9,6 +9,16 @@ class CartPage extends StatefulWidget {
 }
 
 class _CartPageState extends State<CartPage> {
+  late bool isDeleteClicked = false;
+
+  refresh() {
+    setState(() {});
+  }
+
+  onRestore() {
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -49,7 +59,7 @@ class _CartPageState extends State<CartPage> {
                     children: [
                       Text(
                         'Total',
-                        style: TextStyle(fontSize: 20),
+                        style: TextStyle(fontSize: 16),
                       ),
                       Spacer(),
                       Container(
@@ -59,7 +69,7 @@ class _CartPageState extends State<CartPage> {
                             children: [
                               Container(
                                 height: 30,
-                                width: 80,
+                                width: 60,
                                 alignment: Alignment.center,
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(15),
@@ -67,12 +77,15 @@ class _CartPageState extends State<CartPage> {
                                 child: Text(
                                   '\$' + cartProduct.total.toStringAsFixed(2),
                                   style: TextStyle(
-                                      fontSize: 14, color: Colors.white54),
+                                      fontSize: 12, color: Colors.white54),
                                 ),
+                              ),
+                              SizedBox(
+                                width: 5,
                               ),
                               Container(
                                 height: 40,
-                                width: 120,
+                                width: 100,
                                 alignment: Alignment.center,
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(5),
@@ -80,8 +93,37 @@ class _CartPageState extends State<CartPage> {
                                 child: Text(
                                   'ORDER NOW',
                                   style: TextStyle(
-                                      fontSize: 16, color: Colors.white),
+                                      fontSize: 14, color: Colors.white),
                                 ),
+                              ),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              ElevatedButton(
+                                onPressed: () {
+                                  setState(() {
+                                    isDeleteClicked = !isDeleteClicked;
+                                    cartProduct.deleteAllFromCloneCart(
+                                        cartProductDeleted, context, onRestore);
+                                  });
+                                },
+                                style: ButtonStyle(
+                                    backgroundColor:
+                                        MaterialStateProperty.all<Color>(
+                                            Colors.white),
+                                    side: MaterialStateProperty.all(BorderSide(
+                                        color: Colors.red,
+                                        width: 2.0,
+                                        style: BorderStyle.solid))),
+                                child: isDeleteClicked
+                                    ? Text(
+                                        'Delete selected',
+                                        style: TextStyle(color: Colors.red),
+                                      )
+                                    : Text(
+                                        'Delete',
+                                        style: TextStyle(color: Colors.red),
+                                      ),
                               ),
                             ],
                           ),
@@ -99,25 +141,24 @@ class _CartPageState extends State<CartPage> {
                 child: ListView.separated(
                   shrinkWrap: true,
                   scrollDirection: Axis.vertical,
-                  itemCount: cartProduct.cartItems.length,
+                  itemCount: cartProduct.cartItemsList.length,
                   itemBuilder: (BuildContext context, int index) {
-                    final item = cartProduct.cartItems[index];
+                    final item = cartProduct.cartItemsList[index];
                     return Padding(
                       padding: const EdgeInsets.only(top: 8.0),
                       child: Dismissible(
                         key: UniqueKey(),
                         onDismissed: (direction) {
                           setState(() {
-                            cartProduct
-                                .removeFromCart(cartProduct.cartItems[index]);
+                            cartProduct.removeFromCart(
+                                cartProduct.cartItemsList[index]);
                           });
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                               content:
                                   Text('${item.product.title} đã bị xóa')));
                         },
-                        child: CartItem(
-                          cartProduct.cartItems[index],
-                        ),
+                        child: CartItem(cartProduct.cartItemsList[index], index,
+                            refresh, isDeleteClicked),
                       ),
                     );
                   },
