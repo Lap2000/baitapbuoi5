@@ -3,22 +3,26 @@ import 'package:baitapbuoi5/Models/product_model.dart';
 class CartItems {
   Product product;
   int count;
-  double total;
+  double _total = 0;
 
-  CartItems({required this.product, required this.count, required this.total});
+  double get total => _total;
+
+  CartItems({required this.product, required this.count}) {
+    _total = product.price * count;
+  }
 
   void addcount() {
     count = count + 1;
-    total = total + product.price;
+    _total = _total + product.price;
   }
 
   void addCountNum(int num) {
     count = count + num;
-    total = total + product.price * num;
+    _total = _total + product.price * num;
   }
 
   void subcount() {
     count = count - 1;
-    total = total - product.price;
+    _total = _total - product.price;
   }
 }

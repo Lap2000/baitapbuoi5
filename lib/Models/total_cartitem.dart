@@ -63,8 +63,7 @@ class CartTotal {
   void addToCart(Product product) {
     bool isAdd = false;
     if (cartItemsList.length == 0) {
-      CartItems cartItem =
-          CartItems(product: product, total: product.price, count: 1);
+      CartItems cartItem = CartItems(product: product, count: 1);
       cartItemsList.add(cartItem);
     } else {
       for (int i = 0; i < cartItemsList.length; i++) {
@@ -75,8 +74,7 @@ class CartTotal {
         }
       }
       if (!isAdd) {
-        CartItems cartItem =
-            CartItems(product: product, total: product.price, count: 1);
+        CartItems cartItem = CartItems(product: product, count: 1);
         cartItemsList.add(cartItem);
       }
     }
